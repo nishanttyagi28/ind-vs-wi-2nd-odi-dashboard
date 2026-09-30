@@ -3,10 +3,10 @@
   "name": "p05_player_comparison_bdry",
   "position": {
     "x": 976,
-    "y": 204,
+    "y": 348,
     "z": 11000,
     "width": 924,
-    "height": 400,
+    "height": 260,
     "tabOrder": 11000
   },
   "visual": {

@@ -1,91 +1,35 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
-  "name": "p05_player_comparison_sr",
+  "name": "p05_player_comparison_photo_gill_card",
   "position": {
-    "x": 20,
-    "y": 348,
-    "z": 10000,
-    "width": 940,
-    "height": 260,
-    "tabOrder": 10000
+    "x": 650,
+    "y": 204,
+    "z": 3900,
+    "width": 600,
+    "height": 136,
+    "tabOrder": 3900
   },
   "visual": {
-    "visualType": "clusteredBarChart",
-    "query": {
-      "queryState": {
-        "Category": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Batting"
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": " ",
+                    "textStyle": {
+                      "fontSize": "4pt"
                     }
-                  },
-                  "Property": "batter"
-                }
-              },
-              "queryRef": "Batting.batter",
-              "nativeQueryRef": "batter"
-            }
-          ]
-        },
-        "Series": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Batting"
-                    }
-                  },
-                  "Property": "team"
-                }
-              },
-              "queryRef": "Batting.team",
-              "nativeQueryRef": "team"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Strike Rate"
-                }
-              },
-              "queryRef": "_Measures.Strike Rate",
-              "nativeQueryRef": "Strike Rate"
-            }
-          ]
-        }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "_Measures"
                   }
-                },
-                "Property": "Strike Rate"
+                ]
               }
-            },
-            "direction": "Descending"
+            ]
           }
-        ],
-        "isDefaultSort": false
-      }
+        }
+      ]
     },
     "visualContainerObjects": {
       "title": [
@@ -94,14 +38,14 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Strike rate'"
+                  "Value": "''"
                 }
               }
             },
@@ -120,13 +64,6 @@
               "expr": {
                 "Literal": {
                   "Value": "12D"
-                }
-              }
-            },
-            "fontFamily": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Segoe UI Semibold'"
                 }
               }
             }
@@ -228,7 +165,6 @@
           }
         }
       ]
-    },
-    "drillFilterOtherVisuals": true
+    }
   }
 }

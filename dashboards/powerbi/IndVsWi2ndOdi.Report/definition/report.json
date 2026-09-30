@@ -17,6 +17,21 @@
           "name": "match-card-theme.json",
           "path": "match-card-theme.json",
           "type": "CustomTheme"
+        },
+        {
+          "name": "rohit.jpg",
+          "path": "rohit.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "gill.jpg",
+          "path": "gill.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "kohli.jpg",
+          "path": "kohli.jpg",
+          "type": "Image"
         }
       ]
     }
