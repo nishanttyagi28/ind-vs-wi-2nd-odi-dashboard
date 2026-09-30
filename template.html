@@ -24,12 +24,20 @@ table{width:100%;border-collapse:collapse;font-size:13px}th{background:#323130;c
 td{padding:5px 8px;border-bottom:1px solid var(--line);text-align:right}th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
 tr:hover td{background:#2F2E2D}.tot td{font-weight:600;background:#2B2A29}.tag{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
 .foot{color:var(--mut);font-size:11px;margin-top:10px}
+.stars{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.star{display:flex;align-items:center;gap:16px;background:linear-gradient(90deg,#1d3557 0%,var(--panel) 70%);border:1px solid var(--line);border-left:4px solid var(--ind);border-radius:4px;padding:12px 16px}
+.star img{width:96px;height:96px;border-radius:50%;object-fit:cover;border:3px solid var(--acc);flex:none}
+.star .nm{font-size:18px;font-weight:600}.star .big{font-size:30px;font-weight:700;color:var(--acc);line-height:1.1}.star .big small{font-size:14px;color:var(--mut);font-weight:400}
+.star .st{display:flex;gap:14px;margin-top:4px;font-size:12px;color:var(--mut)}.star .st b{display:block;color:var(--txt);font-size:16px}
+.star .ds{font-size:11px;color:var(--mut);margin-top:3px}.sechead{font-size:13px;color:var(--mut);text-transform:uppercase;letter-spacing:.8px;margin:0 0 8px}
+.credits{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:10px 14px;margin-top:12px;font-size:12px;color:var(--mut)}.credits a{color:#118DFF}.credits h3{margin:0 0 6px;font-size:13px;color:var(--txt)}
 </style></head><body>
 <div class="top"><div class="logo"><div class="pbi"><i style="height:14px"></i><i style="height:22px"></i><i style="height:32px"></i></div>
 <div><h1 id="title"></h1><div class="sub" id="subtitle"></div></div></div>
 <div class="slicer" id="slicer"><button data-t="All" class="on">All teams</button><button data-t="India">India</button><button data-t="West Indies">West Indies</button></div></div>
 <div class="wrap">
 <div class="kpis" id="kpis"></div>
+<div class="sechead">Star Performers · India batting</div><div class="stars" id="stars"></div>
 <div class="grid g2"><div class="panel"><h3>Runs by Batter</h3><div class="h">Bar colour = team · hover for balls, SR, 4s/6s</div><div id="c_runs" class="chart"></div></div>
 <div class="panel"><h3>Bowling: Wickets vs Economy</h3><div class="h">Bars = wickets (left axis) · diamonds = economy (right axis)</div><div id="c_bowl" class="chart"></div></div></div>
 <div class="grid g3"><div class="panel"><h3>Run Progression (Worm) & Fall of Wickets</h3><div class="h">Cumulative runs per over · ✕ = wicket</div><div id="c_worm" class="chart"></div></div>
@@ -37,6 +45,7 @@ tr:hover td{background:#2F2E2D}.tot td{font-weight:600;background:#2B2A29}.tag{d
 <div class="panel"><h3>Scoring Mix by Team</h3><div class="h">Boundary runs vs other runs (incl. extras)</div><div id="c_mix" class="chart"></div></div></div>
 <div class="grid"><div class="panel"><h3>Runs per Over (Manhattan)</h3><div class="h">Over-by-over runs, both innings</div><div id="c_man" class="chart" style="height:300px"></div></div></div>
 <div class="grid g2"><div class="panel"><h3>Batting Scorecard</h3><div id="t_bat"></div></div><div class="panel"><h3>Bowling Scorecard</h3><div id="t_bowl"></div><h3 style="margin-top:14px">Fall of Wickets</h3><div id="t_fow"></div></div></div>
+<div class="credits" id="credits"></div>
 <div class="foot" id="foot"></div>
 </div>
 <script>
@@ -115,5 +124,10 @@ function render(team){
   DATA.fow.filter(r=>T(r.batting_team)).map(r=>`<tr><td><span class="tag" style="background:${C[r.batting_team]}"></span>${r.batting_team}</td><td style="text-align:left">${r.wicket_no}</td><td>${r.score}</td><td>${r.batter_out}</td><td>${Number(r.over).toFixed(1)}</td></tr>`).join('')+'</table>';
 }
 document.querySelectorAll('#slicer button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#slicer button').forEach(x=>x.classList.remove('on'));b.classList.add('on');render(b.dataset.t)});
+document.getElementById('stars').innerHTML=DATA.stars.map(p=>`<div class="star"><img src="${p.img}" alt="${p.player}">
+ <div><div class="nm">${p.player}</div><div class="big">${p.runs}${p.not_out?'*':''} <small>off ${p.balls} balls</small></div>
+ <div class="st"><span><b>${p.fours}</b>4s</span><span><b>${p.sixes}</b>6s</span><span><b>${p.sr.toFixed(2)}</b>SR</span><span><b>${p.boundary_runs}</b>Bdry runs</span></div>
+ <div class="ds">${p.dismissal}</div></div></div>`).join('');
+document.getElementById('credits').innerHTML='<h3>Photo credits</h3>'+DATA.stars.map(p=>`${p.player}: <a href="${p.commons_page}">${p.commons_file}</a> by ${p.author}, licensed <a href="${p.license_url}">${p.license}</a>, via Wikimedia Commons. Cropped and resized to a square headshot.`).join('<br>')+'<br>Headshots are from earlier events, not from this match.';
 render('All');
 </script></body></html>

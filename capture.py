@@ -10,7 +10,10 @@ async def main():
         await pg.close()
         vd=B+'/_vid'; shutil.rmtree(vd,ignore_errors=True)
         ctx=await br.new_context(viewport={'width':1600,'height':900},record_video_dir=vd,record_video_size={'width':1600,'height':900})
-        pg=await ctx.new_page(); await pg.goto(URL); await pg.wait_for_timeout(3500)
+        pg=await ctx.new_page(); await pg.goto(URL); await pg.wait_for_timeout(3000)
+        for i in range(3):  # linger on Star Performers photo cards
+            bb=await pg.locator('.star').nth(i).bounding_box()
+            await pg.mouse.move(bb['x']+60,bb['y']+bb['height']/2,steps=20); await pg.wait_for_timeout(1200)
         async def hover(sel,fx,fy,ms=1800):
             bb=await pg.locator(sel).bounding_box()
             await pg.mouse.move(bb['x']+bb['width']*fx,bb['y']+bb['height']*fy,steps=25); await pg.wait_for_timeout(ms)
