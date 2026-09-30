@@ -1,0 +1,391 @@
+/// All report measures. Display folders group them by subject.
+table _Measures
+	lineageTag: eb27aa45-be10-509e-97e2-f2bec383c1f3
+
+	/// Published innings total from the scorecard
+	measure 'Innings Score' = SUM ( Innings[score] )
+		formatString: #,0
+		displayFolder: Match
+		lineageTag: 1c8252ca-d527-5e97-8711-90ad6f3f6b43
+
+	/// Wickets lost, from the scorecard
+	measure 'Innings Wickets' = SUM ( Innings[wickets] )
+		formatString: #,0
+		displayFolder: Match
+		lineageTag: 1c13e133-a68d-5e02-a530-cd90cfaa382b
+
+	/// Legal balls implied by the published overs figure
+	measure 'Legal Balls' = SUM ( Innings[balls] )
+		formatString: #,0
+		displayFolder: Match
+		lineageTag: 4bc60ba4-f5c3-5e21-a97c-236e4fedfc60
+
+	/// Extras on the scorecard
+	measure 'Extras' = SUM ( Innings[extras] )
+		formatString: #,0
+		displayFolder: Match
+		lineageTag: d6abcde5-c95f-5e20-9a90-6b5496f3cece
+
+	/// Innings total per over
+	measure 'Run Rate' = DIVIDE ( [Innings Score], DIVIDE ( [Legal Balls], 6 ) )
+		formatString: 0.00
+		displayFolder: Match
+		lineageTag: 80e6ca42-e4e9-570d-8bae-b4314e02e44c
+
+	/// West Indies innings total
+	measure 'West Indies Score' = CALCULATE ( [Innings Score], REMOVEFILTERS ( Team ), Innings[batting_team] = "West Indies" )
+		formatString: #,0
+		displayFolder: Match
+		lineageTag: 48fac3f4-3748-5a3f-9bf5-7aafd2319042
+
+	/// India innings total
+	measure 'India Score' = CALCULATE ( [Innings Score], REMOVEFILTERS ( Team ), Innings[batting_team] = "India" )
+		formatString: #,0
+		displayFolder: Match
+		lineageTag: 6760e224-a32b-54f4-afe0-71424d720e7e
+
+	/// Wickets lost by West Indies
+	measure 'West Indies Wickets' = CALCULATE ( [Innings Wickets], REMOVEFILTERS ( Team ), Innings[batting_team] = "West Indies" )
+		formatString: #,0
+		displayFolder: Match
+		lineageTag: 0beba07b-ed54-5065-88e1-5e9db8374cf5
+
+	/// Wickets lost by India
+	measure 'India Wickets' = CALCULATE ( [Innings Wickets], REMOVEFILTERS ( Team ), Innings[batting_team] = "India" )
+		formatString: #,0
+		displayFolder: Match
+		lineageTag: c72505cc-4e78-5b28-8b56-a845c848970b
+
+	/// West Indies runs per over
+	measure 'West Indies Run Rate' = CALCULATE ( [Run Rate], REMOVEFILTERS ( Team ), Innings[batting_team] = "West Indies" )
+		formatString: 0.00
+		displayFolder: Match
+		lineageTag: 0123376e-a793-5e6a-a792-0d75f069a287
+
+	/// India runs per over
+	measure 'India Run Rate' = CALCULATE ( [Run Rate], REMOVEFILTERS ( Team ), Innings[batting_team] = "India" )
+		formatString: 0.00
+		displayFolder: Match
+		lineageTag: 781c55ee-39f7-5f60-b90f-18e276302533
+
+	/// Balls left in the 300-ball innings when India finished
+	measure 'Balls Remaining' = 
+			VAR IndiaBalls =
+			    CALCULATE ( [Legal Balls], REMOVEFILTERS ( Team ), Innings[batting_team] = "India" )
+			RETURN
+			    300 - IndiaBalls
+		formatString: #,0
+		displayFolder: Match
+		lineageTag: b99bcc01-3982-58df-a6d2-c5d4b64373e7
+
+	/// Wickets India still had at the end of the chase
+	measure 'Wickets In Hand' = 
+			VAR IndiaWickets =
+			    CALCULATE ( [Innings Wickets], REMOVEFILTERS ( Team ), Innings[batting_team] = "India" )
+			RETURN
+			    10 - IndiaWickets
+		formatString: #,0
+		displayFolder: Match
+		lineageTag: 5f068191-a3bb-5d1c-8cad-0b74fda48b1d
+
+	/// Runs summed from the over summaries
+	measure 'Overs Runs' = SUM ( Overs[runs_in_over] )
+		formatString: #,0
+		displayFolder: Match
+		lineageTag: bae95a20-8a5e-5ce8-863d-5260cc034af1
+
+	/// Innings total minus the over-summary total
+	measure 'Scorecard Gap' = [Innings Score] - [Overs Runs]
+		formatString: #,0
+		displayFolder: Match
+		lineageTag: 2caf60d4-617b-57c9-a080-138a7f3ce2f4
+
+	/// Match result
+	measure 'Result' = SELECTEDVALUE ( Match[result] )
+		formatString: @
+		displayFolder: Match
+		lineageTag: 673e85da-d8ca-5318-8160-72f3e2441d84
+
+	/// Series score after this match
+	measure 'Series Status' = SELECTEDVALUE ( Match[series_status] )
+		formatString: @
+		displayFolder: Match
+		lineageTag: 0fb46a16-69a7-5712-bea1-81ae6b82f0be
+
+	/// Runs off the bat
+	measure 'Batter Runs' = SUM ( Batting[runs] )
+		formatString: #,0
+		displayFolder: Batting
+		lineageTag: 531a7492-e943-5fb7-a45b-bfbf65f2d7b0
+
+	/// Balls faced on the batting card
+	measure 'Balls Faced' = SUM ( Batting[balls] )
+		formatString: #,0
+		displayFolder: Batting
+		lineageTag: 617bdcc8-fa7d-52d5-bcf0-efabc2f1ae62
+
+	/// Runs per 100 balls faced
+	measure 'Strike Rate' = DIVIDE ( [Batter Runs], [Balls Faced] ) * 100
+		formatString: 0.00
+		displayFolder: Batting
+		lineageTag: a300af17-c527-51f6-b7ce-463de1d8b98c
+
+	/// Fours
+	measure 'Fours' = SUM ( Batting[fours] )
+		formatString: #,0
+		displayFolder: Batting
+		lineageTag: e75b0413-b873-539c-ae72-53caeb9e2d84
+
+	/// Sixes
+	measure 'Sixes' = SUM ( Batting[sixes] )
+		formatString: #,0
+		displayFolder: Batting
+		lineageTag: 2bd98828-f6ff-5da4-8d69-182fa885bc0e
+
+	/// Runs scored in fours and sixes
+	measure 'Boundary Runs' = [Fours] * 4 + [Sixes] * 6
+		formatString: #,0
+		displayFolder: Batting
+		lineageTag: 97cf82ab-e5b8-51c8-b547-6a80e4f7c929
+
+	/// Boundary runs as a share of batter runs
+	measure 'Boundary Pct' = DIVIDE ( [Boundary Runs], [Batter Runs] )
+		formatString: 0.0%
+		displayFolder: Batting
+		lineageTag: 4adb4ad9-c569-51c9-b0d4-700453ceb28b
+
+	/// Batter runs that were not fours or sixes
+	measure 'Non Boundary Runs' = [Batter Runs] - [Boundary Runs]
+		formatString: #,0
+		displayFolder: Batting
+		lineageTag: 1d01ee66-9089-5582-8530-c5b8cc7e093b
+
+	/// Innings of 100 or more
+	measure 'Centuries' = COUNTROWS ( FILTER ( Batting, Batting[runs] >= 100 ) )
+		formatString: #,0
+		displayFolder: Batting
+		lineageTag: c89387b3-b385-5fbc-ab73-be9494250f56
+
+	/// Innings of 200 or more
+	measure 'Double Centuries' = COUNTROWS ( FILTER ( Batting, Batting[runs] >= 200 ) )
+		formatString: #,0
+		displayFolder: Batting
+		lineageTag: 7bacc261-8485-5bf0-ae7c-85934d01cf3c
+
+	/// Innings of 50 to 99
+	measure 'Fifties' = COUNTROWS ( FILTER ( Batting, Batting[runs] >= 50 && Batting[runs] < 100 ) )
+		formatString: #,0
+		displayFolder: Batting
+		lineageTag: b0252a1f-357d-5604-83f0-b8544ce5daa7
+
+	/// Not-out innings
+	measure 'Not Outs' = SUM ( Batting[not_out] )
+		formatString: #,0
+		displayFolder: Batting
+		lineageTag: 30decf42-8673-5477-af7a-e8563cf4cd3f
+
+	/// Players who batted
+	measure 'Batters Used' = COUNTROWS ( Batting )
+		formatString: #,0
+		displayFolder: Batting
+		lineageTag: 3093012a-8be2-544b-b2d2-b570f4f0dbd8
+
+	/// Highest individual score
+	measure 'Highest Score' = MAX ( Batting[runs] )
+		formatString: #,0
+		displayFolder: Batting
+		lineageTag: fdea25af-1ef5-5f3f-a59a-6c5ad848601a
+
+	/// Highest scorer on the batting card
+	measure 'Top Scorer' = 
+			VAR TopRow =
+			    TOPN ( 1, Batting, Batting[runs], DESC, Batting[balls], ASC )
+			RETURN
+			    CONCATENATEX ( TopRow, Batting[batter] & " " & Batting[runs] & IF ( Batting[not_out] = 1, "*", "" ) )
+		formatString: @
+		displayFolder: Batting
+		lineageTag: 8c67251f-2e71-56c4-9ad6-345b99a21a72
+
+	/// Batting-card balls minus legal balls in the over summary
+	measure 'Balls Faced Gap' = 
+			SUMX (
+			    VALUES ( Innings[batting_team] ),
+			    VAR Side = Innings[batting_team]
+			    RETURN
+			        CALCULATE ( SUM ( Batting[balls] ), Batting[team] = Side )
+			            - CALCULATE ( SUM ( Overs[legal_balls] ), Overs[batting_team] = Side )
+			)
+		formatString: #,0
+		displayFolder: Batting
+		lineageTag: b2ee333f-c09a-50a8-8ae1-64973373cbb5
+
+	/// Boundary and non-boundary batter runs
+	measure 'Scoring Mix Runs' = SUM ( ScoringMix[runs] )
+		formatString: #,0
+		displayFolder: Batting
+		lineageTag: 661b7a46-d35c-5d0e-8939-80e9ca7300d7
+
+	/// Wickets on the bowling card
+	measure 'Wickets Taken' = SUM ( Bowling[wickets] )
+		formatString: #,0
+		displayFolder: Bowling
+		lineageTag: 4063bede-e9a8-5942-a031-9885004dce9d
+
+	/// Runs conceded on the bowling card
+	measure 'Runs Conceded' = SUM ( Bowling[runs_conceded] )
+		formatString: #,0
+		displayFolder: Bowling
+		lineageTag: 856ff74b-1a63-5fa7-9d9f-b639d7d440e7
+
+	/// Balls bowled on the bowling card
+	measure 'Balls Bowled' = SUM ( Bowling[balls] )
+		formatString: #,0
+		displayFolder: Bowling
+		lineageTag: 1668e8f6-e46c-5fa5-a204-7b67724354b9
+
+	/// Runs conceded per over
+	measure 'Economy' = DIVIDE ( [Runs Conceded], DIVIDE ( [Balls Bowled], 6 ) )
+		formatString: 0.00
+		displayFolder: Bowling
+		lineageTag: 48436cb0-76a8-5903-a401-3294e5a986b1
+
+	/// Runs conceded per wicket
+	measure 'Bowling Average' = DIVIDE ( [Runs Conceded], [Wickets Taken] )
+		formatString: 0.00
+		displayFolder: Bowling
+		lineageTag: 5c800622-a061-5354-9034-378d9a5a5028
+
+	/// Balls bowled per wicket
+	measure 'Bowling Strike Rate' = DIVIDE ( [Balls Bowled], [Wickets Taken] )
+		formatString: 0.00
+		displayFolder: Bowling
+		lineageTag: 1bcfed03-aa7a-5536-9e11-f814de870353
+
+	/// Maiden overs
+	measure 'Maidens' = SUM ( Bowling[maidens] )
+		formatString: #,0
+		displayFolder: Bowling
+		lineageTag: 1007c51c-ac0d-5da9-b075-0a24997ad68d
+
+	/// Lowest economy of anyone who bowled at least one over
+	measure 'Best Economy' = MINX ( FILTER ( Bowling, Bowling[balls] >= 6 ), DIVIDE ( Bowling[runs_conceded] * 6, Bowling[balls] ) )
+		formatString: 0.00
+		displayFolder: Bowling
+		lineageTag: 7c36997a-ab50-5555-b987-96f366778799
+
+	/// Most wickets, then fewest runs conceded
+	measure 'Best Bowler' = 
+			VAR TopRow =
+			    TOPN ( 1, Bowling, Bowling[wickets], DESC, Bowling[runs_conceded], ASC, Bowling[balls], ASC )
+			RETURN
+			    CONCATENATEX ( TopRow, Bowling[bowler] & " " & Bowling[wickets] & "/" & Bowling[runs_conceded] )
+		formatString: @
+		displayFolder: Bowling
+		lineageTag: 6a1f5698-5ceb-5080-a701-4e1228ec2085
+
+	/// Innings totals minus the bowling card, summed across innings
+	measure 'Bowling Card Gap' = 
+			CALCULATE (
+			    SUMX (
+			        VALUES ( Innings[innings] ),
+			        VAR Inn = Innings[innings]
+			        RETURN
+			            CALCULATE ( SUM ( Innings[score] ), Innings[innings] = Inn )
+			                - CALCULATE ( SUM ( Bowling[runs_conceded] ), Bowling[innings] = Inn )
+			    ),
+			    REMOVEFILTERS ( Team )
+			)
+		formatString: #,0
+		displayFolder: Bowling
+		lineageTag: 8d887c4c-6ec7-5baa-a6df-fd48168061f2
+
+	/// Wickets read off the over-summary cumulative
+	measure 'Overs Wickets' = SUM ( Overs[wickets_in_over] )
+		formatString: #,0
+		displayFolder: Phases
+		lineageTag: aa597854-595a-532f-aa4a-20b81575da00
+
+	/// Score at the end of the over
+	measure 'Cumulative Runs' = MAX ( Overs[cumulative_runs] )
+		formatString: #,0
+		displayFolder: Phases
+		lineageTag: 552c4ecf-4440-5a35-9015-af5ea05c2363
+
+	/// Runs between fall-of-wicket scores, from zero
+	measure 'Runs Added' = SUM ( FallOfWickets[runs_added] )
+		formatString: #,0
+		displayFolder: Phases
+		lineageTag: 71d567c0-154e-5f4b-a998-1efb30656f0a
+
+	/// Fall-of-wicket entries
+	measure 'Wickets Fallen' = COUNTROWS ( FallOfWickets )
+		formatString: #,0
+		displayFolder: Phases
+		lineageTag: 727411ba-bf84-5cdb-87bd-3412288eff55
+
+	/// Runs scored after the last wicket in each innings
+	measure 'Runs After Last Wicket' = 
+			SUMX (
+			    VALUES ( Innings[batting_team] ),
+			    VAR Side = Innings[batting_team]
+			    VAR LastScore =
+			        CALCULATE ( MAXX ( FallOfWickets, FallOfWickets[score] ), FallOfWickets[batting_team] = Side )
+			    VAR Total =
+			        CALCULATE ( SUM ( Innings[score] ), Innings[batting_team] = Side )
+			    RETURN
+			        Total - LastScore
+			)
+		formatString: #,0
+		displayFolder: Phases
+		lineageTag: 5e3c297f-c8c1-5d9c-9a27-1eec28512486
+
+	/// Most runs in a single over summary
+	measure 'Highest Over' = MAX ( Overs[runs_in_over] )
+		formatString: #,0
+		displayFolder: Phases
+		lineageTag: 2575e615-998f-5cfd-accc-938f42c489bd
+
+	/// Runs per over inside the current phase
+	measure 'Phase Run Rate' = DIVIDE ( SUM ( Overs[runs_in_over] ), DIVIDE ( SUM ( Overs[legal_balls] ), 6 ) )
+		formatString: 0.00
+		displayFolder: Phases
+		lineageTag: a277283d-aa7d-57d9-9cab-9716e62242a7
+
+	/// Players who did not bat
+	measure 'Did Not Bat' = COUNTROWS ( DidNotBat )
+		formatString: #,0
+		displayFolder: Squad
+		lineageTag: 647d8856-9d41-5ac6-857c-36af05087d3e
+
+	/// Players who appear on both the batting and bowling cards
+	measure 'All Rounders' = COUNTROWS ( AllRounder )
+		formatString: #,0
+		displayFolder: Squad
+		lineageTag: acc53949-7673-5356-8ba5-9cb44ca6fede
+
+	/// Runs by players who also bowled
+	measure 'All Rounder Runs' = SUM ( AllRounder[runs] )
+		formatString: #,0
+		displayFolder: Squad
+		lineageTag: da3ed508-fcbd-54ad-ab54-7c6c273be74f
+
+	/// Wickets by players who also batted
+	measure 'All Rounder Wickets' = SUM ( AllRounder[wickets] )
+		formatString: #,0
+		displayFolder: Squad
+		lineageTag: 75cfbd74-45ea-506c-86da-70fdb414943f
+
+	column Value
+		dataType: string
+		isHidden
+		lineageTag: feb51d03-a639-5a32-a1eb-e8e7aeb0caae
+		summarizeBy: none
+		sourceColumn: Value
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = #table ( type table [ Value = text ], {} )
+				in
+				    Source

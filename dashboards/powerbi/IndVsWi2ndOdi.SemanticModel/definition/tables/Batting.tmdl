@@ -1,0 +1,101 @@
+/// Batting card, one row per batter who faced a ball.
+table Batting
+	lineageTag: f933bb66-aae2-512c-bf68-b2342dd0c983
+
+	column match_id
+		dataType: int64
+		formatString: 0
+		lineageTag: d73da6d6-584d-5037-91df-3e9061ab592c
+		summarizeBy: none
+		sourceColumn: match_id
+
+	column innings
+		dataType: int64
+		formatString: 0
+		lineageTag: 885c35c5-b45a-5fd1-9974-76e3d27a709e
+		summarizeBy: none
+		sourceColumn: innings
+
+	column team
+		dataType: string
+		lineageTag: ea6ba596-d61c-5c7d-89d7-5804a776ba59
+		summarizeBy: none
+		sourceColumn: team
+
+	column bat_pos
+		dataType: int64
+		formatString: 0
+		lineageTag: f4c47a99-8366-5863-be05-20de2c1346bb
+		summarizeBy: none
+		sourceColumn: bat_pos
+
+	column batter
+		dataType: string
+		lineageTag: 5bf0319a-eaeb-5b8e-9dca-8af05f15da81
+		summarizeBy: none
+		sourceColumn: batter
+
+	column dismissal
+		dataType: string
+		lineageTag: 9a4b3976-7b2c-54c0-b545-e2a39eb608ff
+		summarizeBy: none
+		sourceColumn: dismissal
+
+	column runs
+		dataType: int64
+		formatString: 0
+		lineageTag: 5beac5c3-a665-5d93-b815-e90beca55d92
+		summarizeBy: sum
+		sourceColumn: runs
+
+	column balls
+		dataType: int64
+		formatString: 0
+		lineageTag: fb151749-53bb-5999-a918-9e89588a6ee0
+		summarizeBy: sum
+		sourceColumn: balls
+
+	column fours
+		dataType: int64
+		formatString: 0
+		lineageTag: 718866a3-26eb-5510-8dc2-002eab95491f
+		summarizeBy: sum
+		sourceColumn: fours
+
+	column sixes
+		dataType: int64
+		formatString: 0
+		lineageTag: ee1376d0-57e4-5b75-b43a-64d18cc1b7f0
+		summarizeBy: sum
+		sourceColumn: sixes
+
+	column not_out
+		dataType: int64
+		formatString: 0
+		lineageTag: 5da0623d-cc65-53c6-a72d-9df4f1769811
+		summarizeBy: sum
+		sourceColumn: not_out
+
+	column strike_rate
+		dataType: double
+		formatString: 0.00
+		lineageTag: a6fdecd0-4f4e-5ce3-ae0e-ff9fd3f08f33
+		summarizeBy: none
+		sourceColumn: strike_rate
+
+	column boundary_runs
+		dataType: int64
+		formatString: 0
+		lineageTag: 1826ca09-5da7-509c-9323-6a4449e3aa27
+		summarizeBy: sum
+		sourceColumn: boundary_runs
+
+	partition Batting = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document ( File.Contents ( DataFolder & "\Batting.csv" ), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv] ),
+				    Promoted = Table.PromoteHeaders ( Source, [PromoteAllScalars = true] ),
+				    Typed = Table.TransformColumnTypes ( Promoted, {{"match_id", Int64.Type}, {"innings", Int64.Type}, {"team", type text}, {"bat_pos", Int64.Type}, {"batter", type text}, {"dismissal", type text}, {"runs", Int64.Type}, {"balls", Int64.Type}, {"fours", Int64.Type}, {"sixes", Int64.Type}, {"not_out", Int64.Type}, {"strike_rate", type number}, {"boundary_runs", Int64.Type}}, "en-US" )
+				in
+				    Typed

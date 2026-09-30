@@ -1,0 +1,40 @@
+/// Batter runs split into boundary runs and the rest. Extras are not included.
+table ScoringMix
+	lineageTag: fc7275b3-d5f8-59b7-b055-8c753371c62d
+
+	column team
+		dataType: string
+		lineageTag: 2e1f23b9-80b1-548f-a1a1-f184d51c04f6
+		summarizeBy: none
+		sourceColumn: team
+
+	column component
+		dataType: string
+		sortByColumn: component_order
+		lineageTag: 53825607-45eb-52f4-89cb-abafa7e6150f
+		summarizeBy: none
+		sourceColumn: component
+
+	column component_order
+		dataType: int64
+		formatString: 0
+		lineageTag: 6cdd120c-14b1-5148-9168-b9e1d670864c
+		summarizeBy: none
+		sourceColumn: component_order
+
+	column runs
+		dataType: int64
+		formatString: 0
+		lineageTag: 3ccc3d16-410b-54b8-ac82-a4c986a83258
+		summarizeBy: sum
+		sourceColumn: runs
+
+	partition ScoringMix = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document ( File.Contents ( DataFolder & "\ScoringMix.csv" ), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv] ),
+				    Promoted = Table.PromoteHeaders ( Source, [PromoteAllScalars = true] ),
+				    Typed = Table.TransformColumnTypes ( Promoted, {{"team", type text}, {"component", type text}, {"component_order", Int64.Type}, {"runs", Int64.Type}}, "en-US" )
+				in
+				    Typed

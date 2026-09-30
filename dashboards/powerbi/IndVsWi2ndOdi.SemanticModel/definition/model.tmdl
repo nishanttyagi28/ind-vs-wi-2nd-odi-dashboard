@@ -1,0 +1,19 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: en-US
+
+annotation PBI_QueryOrder = ["DataFolder", "Match", "Innings", "Team", "Batting", "Bowling", "Overs", "FallOfWickets", "DidNotBat", "ScoringMix", "AllRounder", "_Measures"]
+
+ref table Match
+ref table Innings
+ref table Team
+ref table Batting
+ref table Bowling
+ref table Overs
+ref table FallOfWickets
+ref table DidNotBat
+ref table ScoringMix
+ref table AllRounder
+ref table _Measures

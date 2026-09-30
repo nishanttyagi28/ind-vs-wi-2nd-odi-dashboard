@@ -1,0 +1,81 @@
+/// Bowling card, one row per bowler.
+table Bowling
+	lineageTag: 8b9dfad6-c6ec-5160-abea-9b50e1ad5acc
+
+	column match_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 026367f4-8b4d-5538-a686-e5d17d357a39
+		summarizeBy: none
+		sourceColumn: match_id
+
+	column innings
+		dataType: int64
+		formatString: 0
+		lineageTag: 7630d51d-bd87-5d38-baff-dc65e2ece8f0
+		summarizeBy: none
+		sourceColumn: innings
+
+	column bowling_team
+		dataType: string
+		lineageTag: 76993f5a-c940-508d-994d-12af6ac8130e
+		summarizeBy: none
+		sourceColumn: bowling_team
+
+	column bowler
+		dataType: string
+		lineageTag: 7faceb7e-90e3-581c-909b-499b5502efbe
+		summarizeBy: none
+		sourceColumn: bowler
+
+	column overs
+		dataType: double
+		formatString: 0.0
+		lineageTag: 2634fd85-ef32-56f4-b4bb-581798fa6a85
+		summarizeBy: none
+		sourceColumn: overs
+
+	column balls
+		dataType: int64
+		formatString: 0
+		lineageTag: fa9bc8a0-31c2-5121-b23c-8735a9c3cf8c
+		summarizeBy: sum
+		sourceColumn: balls
+
+	column maidens
+		dataType: int64
+		formatString: 0
+		lineageTag: c965dc8f-f0c5-5b37-9600-1756d137e606
+		summarizeBy: sum
+		sourceColumn: maidens
+
+	column runs_conceded
+		dataType: int64
+		formatString: 0
+		lineageTag: 4e51329b-d36f-526a-b92f-b0faa6d1d42a
+		summarizeBy: sum
+		sourceColumn: runs_conceded
+
+	column wickets
+		dataType: int64
+		formatString: 0
+		lineageTag: 6597c0c4-eddc-5a9f-b0dd-4704cab20daa
+		summarizeBy: sum
+		sourceColumn: wickets
+
+	column economy
+		dataType: double
+		formatString: 0.00
+		lineageTag: df5ed2f1-c00f-5067-aefb-6257bb5bdc47
+		summarizeBy: none
+		sourceColumn: economy
+
+	partition Bowling = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document ( File.Contents ( DataFolder & "\Bowling.csv" ), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv] ),
+				    Promoted = Table.PromoteHeaders ( Source, [PromoteAllScalars = true] ),
+				    Typed = Table.TransformColumnTypes ( Promoted, {{"match_id", Int64.Type}, {"innings", Int64.Type}, {"bowling_team", type text}, {"bowler", type text}, {"overs", type number}, {"balls", Int64.Type}, {"maidens", Int64.Type}, {"runs_conceded", Int64.Type}, {"wickets", Int64.Type}, {"economy", type number}}, "en-US" )
+				in
+				    Typed

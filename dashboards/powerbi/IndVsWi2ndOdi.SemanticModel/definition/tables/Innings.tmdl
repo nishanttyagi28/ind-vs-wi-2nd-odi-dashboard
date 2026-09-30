@@ -1,0 +1,80 @@
+/// One row per innings. Balls are the published overs figure converted at six balls an over.
+table Innings
+	lineageTag: 88126a77-786a-5421-a83f-2b433628675c
+
+	column match_id
+		dataType: int64
+		formatString: 0
+		lineageTag: e633aa4e-c545-5eff-983d-d347cc3dd73a
+		summarizeBy: none
+		sourceColumn: match_id
+
+	column innings
+		dataType: int64
+		formatString: 0
+		lineageTag: 64e11c57-007c-505f-a484-d3be22c6b9ed
+		summarizeBy: none
+		sourceColumn: innings
+
+	column batting_team
+		dataType: string
+		lineageTag: ddbe307b-0d01-578b-80e8-767f5738a8b7
+		summarizeBy: none
+		sourceColumn: batting_team
+
+	column bowling_team
+		dataType: string
+		lineageTag: cc473a7b-6459-51a9-974b-f1a6062aa40b
+		summarizeBy: none
+		sourceColumn: bowling_team
+
+	column score
+		dataType: int64
+		formatString: 0
+		lineageTag: 9b525b7a-b143-5e7f-905f-ab2de5f3f7b9
+		summarizeBy: sum
+		sourceColumn: score
+
+	column wickets
+		dataType: int64
+		formatString: 0
+		lineageTag: 1c1184a4-bfe1-5f6b-914b-5da1361c8dd0
+		summarizeBy: sum
+		sourceColumn: wickets
+
+	column overs
+		dataType: double
+		formatString: 0.0
+		lineageTag: 34587fca-0a7c-5c7d-87b2-f1540a6a7560
+		summarizeBy: none
+		sourceColumn: overs
+
+	column balls
+		dataType: int64
+		formatString: 0
+		lineageTag: 84238048-5057-5078-87b6-96473834003b
+		summarizeBy: sum
+		sourceColumn: balls
+
+	column extras
+		dataType: int64
+		formatString: 0
+		lineageTag: 81e73ebc-289b-5543-912f-f2f8538b4d96
+		summarizeBy: sum
+		sourceColumn: extras
+
+	column extras_detail
+		dataType: string
+		lineageTag: 401778cc-bec4-531a-be98-0735eaa0c006
+		summarizeBy: none
+		sourceColumn: extras_detail
+
+	partition Innings = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document ( File.Contents ( DataFolder & "\Innings.csv" ), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv] ),
+				    Promoted = Table.PromoteHeaders ( Source, [PromoteAllScalars = true] ),
+				    Typed = Table.TransformColumnTypes ( Promoted, {{"match_id", Int64.Type}, {"innings", Int64.Type}, {"batting_team", type text}, {"bowling_team", type text}, {"score", Int64.Type}, {"wickets", Int64.Type}, {"overs", type number}, {"balls", Int64.Type}, {"extras", Int64.Type}, {"extras_detail", type text}}, "en-US" )
+				in
+				    Typed

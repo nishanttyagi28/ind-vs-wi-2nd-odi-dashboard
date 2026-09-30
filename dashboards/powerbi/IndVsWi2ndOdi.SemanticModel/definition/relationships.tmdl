@@ -1,0 +1,31 @@
+relationship 6375a0b3-1697-53f0-8388-acd8523022e2
+	fromColumn: Batting.team
+	toColumn: Team.team
+
+relationship a864f626-a620-5959-aa19-ed5eae8d0fd2
+	fromColumn: Bowling.bowling_team
+	toColumn: Team.team
+
+relationship 4fd570db-db51-534a-8e59-56fba0e2304d
+	fromColumn: Overs.batting_team
+	toColumn: Team.team
+
+relationship a3b36690-1460-5a53-9d70-04605ff9bb74
+	fromColumn: FallOfWickets.batting_team
+	toColumn: Team.team
+
+relationship 9e16e90f-dcec-5371-b405-cc05ba8eb21f
+	fromColumn: DidNotBat.team
+	toColumn: Team.team
+
+relationship 517ba6e3-d762-5de1-b279-e16bdc52d9e5
+	fromColumn: Innings.batting_team
+	toColumn: Team.team
+
+relationship bf10ac83-752c-5349-9cdc-caa73c727b11
+	fromColumn: ScoringMix.team
+	toColumn: Team.team
+
+relationship 5ece97e7-a6c9-5596-98f3-7e7bc4158711
+	fromColumn: AllRounder.team
+	toColumn: Team.team

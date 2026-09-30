@@ -1,0 +1,25 @@
+/// The two sides in the match.
+table Team
+	lineageTag: 722d827b-64f9-5115-9a34-ddecd9c65874
+
+	column team
+		dataType: string
+		lineageTag: 94486bcb-5662-57fb-b85e-f765d164d0d4
+		summarizeBy: none
+		sourceColumn: team
+
+	column short_name
+		dataType: string
+		lineageTag: ac07186e-f75f-5596-8bcf-b2009b7b08f9
+		summarizeBy: none
+		sourceColumn: short_name
+
+	partition Team = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document ( File.Contents ( DataFolder & "\Team.csv" ), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv] ),
+				    Promoted = Table.PromoteHeaders ( Source, [PromoteAllScalars = true] ),
+				    Typed = Table.TransformColumnTypes ( Promoted, {{"team", type text}, {"short_name", type text}}, "en-US" )
+				in
+				    Typed

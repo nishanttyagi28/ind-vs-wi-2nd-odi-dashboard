@@ -1,0 +1,5 @@
+/// Full path to the repo's dashboards\powerbi\extracts folder. Every table reads its CSV from here.
+expression DataFolder = "C:\\ind-vs-wi-2nd-odi-dashboard\\dashboards\\powerbi\\extracts" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 0764a1bd-ab5d-535b-ba98-aa8bf3693ec5
+
+	annotation PBI_ResultType = Text

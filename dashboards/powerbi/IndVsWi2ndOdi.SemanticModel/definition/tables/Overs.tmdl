@@ -1,0 +1,95 @@
+/// Over summaries. Phase is the ODI split: overs 1-10, 11-40 and 41-50.
+table Overs
+	lineageTag: 8e496945-679f-5312-a237-813f34c50acc
+
+	column match_id
+		dataType: int64
+		formatString: 0
+		lineageTag: aa4854c9-1ce3-5fb2-9d98-72ad3544662e
+		summarizeBy: none
+		sourceColumn: match_id
+
+	column innings
+		dataType: int64
+		formatString: 0
+		lineageTag: aafff1ae-cab7-575e-b886-23c39f062a86
+		summarizeBy: none
+		sourceColumn: innings
+
+	column batting_team
+		dataType: string
+		lineageTag: 03596fc5-10bd-5fb1-a5a2-e73e319e3255
+		summarizeBy: none
+		sourceColumn: batting_team
+
+	column over_no
+		dataType: int64
+		formatString: 0
+		lineageTag: 961d2650-89dc-5243-8b47-a62c8b4738d1
+		summarizeBy: none
+		sourceColumn: over_no
+
+	column runs_in_over
+		dataType: int64
+		formatString: 0
+		lineageTag: 83d42561-2439-5de5-b7c0-d94acf5937c1
+		summarizeBy: sum
+		sourceColumn: runs_in_over
+
+	column cumulative_runs
+		dataType: int64
+		formatString: 0
+		lineageTag: f5252771-18ec-55ef-a3c5-9939f7f332a4
+		summarizeBy: none
+		sourceColumn: cumulative_runs
+
+	column cumulative_wickets
+		dataType: int64
+		formatString: 0
+		lineageTag: 5b7ef3ab-d100-598e-989a-12f20d43d0fe
+		summarizeBy: none
+		sourceColumn: cumulative_wickets
+
+	column legal_balls
+		dataType: int64
+		formatString: 0
+		lineageTag: d6316a6a-7bbc-5640-aeae-3289cb228aee
+		summarizeBy: sum
+		sourceColumn: legal_balls
+
+	column wickets_in_over
+		dataType: int64
+		formatString: 0
+		lineageTag: 660e216c-8c3e-5cc2-9ee2-252832b2910f
+		summarizeBy: sum
+		sourceColumn: wickets_in_over
+
+	column phase
+		dataType: string
+		sortByColumn: phase_order
+		lineageTag: a5897702-249d-54ea-9c6d-91c1fa0aa660
+		summarizeBy: none
+		sourceColumn: phase
+
+	column phase_order
+		dataType: int64
+		formatString: 0
+		lineageTag: 40b43853-1df1-5991-b208-0fbda654540b
+		summarizeBy: none
+		sourceColumn: phase_order
+
+	column note
+		dataType: string
+		lineageTag: e679be54-bb9d-5e3d-9496-b28340e762fe
+		summarizeBy: none
+		sourceColumn: note
+
+	partition Overs = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document ( File.Contents ( DataFolder & "\Overs.csv" ), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv] ),
+				    Promoted = Table.PromoteHeaders ( Source, [PromoteAllScalars = true] ),
+				    Typed = Table.TransformColumnTypes ( Promoted, {{"match_id", Int64.Type}, {"innings", Int64.Type}, {"batting_team", type text}, {"over_no", Int64.Type}, {"runs_in_over", Int64.Type}, {"cumulative_runs", Int64.Type}, {"cumulative_wickets", Int64.Type}, {"legal_balls", Int64.Type}, {"wickets_in_over", Int64.Type}, {"phase", type text}, {"phase_order", Int64.Type}, {"note", type text}}, "en-US" )
+				in
+				    Typed

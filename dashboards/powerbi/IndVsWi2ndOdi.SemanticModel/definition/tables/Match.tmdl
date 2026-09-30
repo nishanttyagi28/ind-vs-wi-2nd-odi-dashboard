@@ -1,0 +1,184 @@
+/// One row for the match: result, venue and the published totals.
+table Match
+	lineageTag: 9bdb7cad-973d-524c-a523-55f61d6a2272
+
+	column match_id
+		dataType: int64
+		formatString: 0
+		lineageTag: e9bcc0f2-bba9-5e3f-8e85-3c488dccdf4b
+		summarizeBy: none
+		sourceColumn: match_id
+
+	column match
+		dataType: string
+		lineageTag: 46f1f682-ea77-5122-a2ca-ca338b99e4ca
+		summarizeBy: none
+		sourceColumn: match
+
+	column series
+		dataType: string
+		lineageTag: 60e7b42a-8c0e-5e72-ac6e-ad6020b58063
+		summarizeBy: none
+		sourceColumn: series
+
+	column format
+		dataType: string
+		lineageTag: 0990252c-8a70-511a-b245-e6d0ddb19269
+		summarizeBy: none
+		sourceColumn: format
+
+	column gender
+		dataType: string
+		lineageTag: 1292fe93-fe78-5784-a29e-fcb89aba4523
+		summarizeBy: none
+		sourceColumn: gender
+
+	column date
+		dataType: string
+		lineageTag: f585a47a-3f76-587f-b88a-fb48dfd1829f
+		summarizeBy: none
+		sourceColumn: date
+
+	column venue
+		dataType: string
+		lineageTag: 78f3fddf-a57c-57e2-a960-1c07c5b393c1
+		summarizeBy: none
+		sourceColumn: venue
+
+	column city
+		dataType: string
+		lineageTag: d806cee2-773a-58b7-83a3-ad7c9e6feb41
+		summarizeBy: none
+		sourceColumn: city
+
+	column toss
+		dataType: string
+		lineageTag: c3733bdd-bdce-51c6-ac98-0fb8f7c5dce5
+		summarizeBy: none
+		sourceColumn: toss
+
+	column team1
+		dataType: string
+		lineageTag: f100cc64-d59c-59b8-acc8-8e9118b152e1
+		summarizeBy: none
+		sourceColumn: team1
+
+	column team1_score
+		dataType: int64
+		formatString: 0
+		lineageTag: 8a616418-ee96-5e79-840e-958318c9278e
+		summarizeBy: sum
+		sourceColumn: team1_score
+
+	column team1_wickets
+		dataType: int64
+		formatString: 0
+		lineageTag: 8ac5b816-b9fc-5675-a4bb-1d5efc581532
+		summarizeBy: sum
+		sourceColumn: team1_wickets
+
+	column team1_overs
+		dataType: double
+		formatString: 0.0
+		lineageTag: e8cfa38d-eb9a-58ec-8fae-fff6cacdd487
+		summarizeBy: none
+		sourceColumn: team1_overs
+
+	column team1_extras
+		dataType: int64
+		formatString: 0
+		lineageTag: 2b959a17-d035-57ff-802f-ae466e0dd3a3
+		summarizeBy: sum
+		sourceColumn: team1_extras
+
+	column team1_extras_detail
+		dataType: string
+		lineageTag: 0d6e02b8-d714-5b5a-8955-33ab18a43246
+		summarizeBy: none
+		sourceColumn: team1_extras_detail
+
+	column team2
+		dataType: string
+		lineageTag: 6d27d555-312c-539c-9424-63853063edfa
+		summarizeBy: none
+		sourceColumn: team2
+
+	column team2_score
+		dataType: int64
+		formatString: 0
+		lineageTag: 74c9afe4-6999-5415-b4bb-82d33d8ff13f
+		summarizeBy: sum
+		sourceColumn: team2_score
+
+	column team2_wickets
+		dataType: int64
+		formatString: 0
+		lineageTag: 79b8c3ef-743d-51e4-a412-ffdcf7b85014
+		summarizeBy: sum
+		sourceColumn: team2_wickets
+
+	column team2_overs
+		dataType: double
+		formatString: 0.0
+		lineageTag: 68a2d835-29e3-5c20-9140-10613ebb8768
+		summarizeBy: none
+		sourceColumn: team2_overs
+
+	column team2_extras
+		dataType: int64
+		formatString: 0
+		lineageTag: f961c511-ad55-539d-ab81-2902e97c82a2
+		summarizeBy: sum
+		sourceColumn: team2_extras
+
+	column team2_extras_detail
+		dataType: string
+		lineageTag: af3c3c33-d056-5a06-9e63-2a27f269d1db
+		summarizeBy: none
+		sourceColumn: team2_extras_detail
+
+	column result
+		dataType: string
+		lineageTag: 9a9102be-1826-5ccc-9994-7bf4d7688c01
+		summarizeBy: none
+		sourceColumn: result
+
+	column series_status
+		dataType: string
+		lineageTag: 1756ca5a-c0c4-5199-84e9-589198fe9411
+		summarizeBy: none
+		sourceColumn: series_status
+
+	column top_scorer
+		dataType: string
+		lineageTag: 4baf0dda-86c9-5a64-84d7-22e75d7b6780
+		summarizeBy: none
+		sourceColumn: top_scorer
+
+	column best_bowler
+		dataType: string
+		lineageTag: 35cf961e-84e5-529a-aa11-3be5ba01d18d
+		summarizeBy: none
+		sourceColumn: best_bowler
+
+	column source_scorecard
+		dataType: string
+		lineageTag: e34cbef4-e61d-53dd-bf7f-23cc93faabfe
+		summarizeBy: none
+		sourceColumn: source_scorecard
+
+	column source_report
+		dataType: string
+		lineageTag: 87384e39-0234-51bb-b207-d00ad6be080f
+		summarizeBy: none
+		sourceColumn: source_report
+
+	partition Match = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document ( File.Contents ( DataFolder & "\Match.csv" ), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv] ),
+				    Promoted = Table.PromoteHeaders ( Source, [PromoteAllScalars = true] ),
+				    Typed = Table.TransformColumnTypes ( Promoted, {{"match_id", Int64.Type}, {"match", type text}, {"series", type text}, {"format", type text}, {"gender", type text}, {"date", type text}, {"venue", type text}, {"city", type text}, {"toss", type text}, {"team1", type text}, {"team1_score", Int64.Type}, {"team1_wickets", Int64.Type}, {"team1_overs", type number}, {"team1_extras", Int64.Type}, {"team1_extras_detail", type text}, {"team2", type text}, {"team2_score", Int64.Type}, {"team2_wickets", Int64.Type}, {"team2_overs", type number}, {"team2_extras", Int64.Type}, {"team2_extras_detail", type text}, {"result", type text}, {"series_status", type text}, {"top_scorer", type text}, {"best_bowler", type text}, {"source_scorecard", type text}, {"source_report", type text}}, "en-US" )
+				in
+				    Typed

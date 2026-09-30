@@ -1,0 +1,74 @@
+/// Fall of wickets. Runs added is the score minus the previous wicket, or minus zero for the first.
+table FallOfWickets
+	lineageTag: b66d230d-c12a-5094-93fb-a89611c0a449
+
+	column match_id
+		dataType: int64
+		formatString: 0
+		lineageTag: efaf90cd-7a1c-50ae-a1b4-ef01986c2b64
+		summarizeBy: none
+		sourceColumn: match_id
+
+	column batting_team
+		dataType: string
+		lineageTag: 1a2790b9-8605-530e-af20-14c23120b6b8
+		summarizeBy: none
+		sourceColumn: batting_team
+
+	column innings
+		dataType: int64
+		formatString: 0
+		lineageTag: f1bbe466-814d-5da8-b271-7919df93eb6c
+		summarizeBy: none
+		sourceColumn: innings
+
+	column wicket_no
+		dataType: int64
+		formatString: 0
+		lineageTag: 97ddaf6c-696a-55c2-98ce-68a824adc7b1
+		summarizeBy: none
+		sourceColumn: wicket_no
+
+	column score
+		dataType: int64
+		formatString: 0
+		lineageTag: aaa5fbee-0ed4-5a6a-9c03-53b359c64ed4
+		summarizeBy: none
+		sourceColumn: score
+
+	column batter_out
+		dataType: string
+		lineageTag: be3b6752-e53d-5146-a634-e6dfdd368fe4
+		summarizeBy: none
+		sourceColumn: batter_out
+
+	column over
+		dataType: double
+		formatString: 0.0
+		lineageTag: e9073343-cb8f-5f4f-ad5a-521f36c99d30
+		summarizeBy: none
+		sourceColumn: over
+
+	column over_num
+		dataType: double
+		formatString: 0.00
+		lineageTag: 530cc355-1794-59c8-9c5b-0776ab0a0bbd
+		summarizeBy: none
+		sourceColumn: over_num
+
+	column runs_added
+		dataType: int64
+		formatString: 0
+		lineageTag: 29e7805d-569d-5e2b-b4ca-1bcc61a79c0d
+		summarizeBy: sum
+		sourceColumn: runs_added
+
+	partition FallOfWickets = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document ( File.Contents ( DataFolder & "\FallOfWickets.csv" ), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv] ),
+				    Promoted = Table.PromoteHeaders ( Source, [PromoteAllScalars = true] ),
+				    Typed = Table.TransformColumnTypes ( Promoted, {{"match_id", Int64.Type}, {"batting_team", type text}, {"innings", Int64.Type}, {"wicket_no", Int64.Type}, {"score", Int64.Type}, {"batter_out", type text}, {"over", type number}, {"over_num", type number}, {"runs_added", Int64.Type}}, "en-US" )
+				in
+				    Typed

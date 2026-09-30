@@ -1,0 +1,202 @@
+// Measures for the 2nd ODI scorecard. The report reads these from the model.
+
+// Match — Published innings total from the scorecard
+Innings Score = SUM ( Innings[score] )
+
+// Match — Wickets lost, from the scorecard
+Innings Wickets = SUM ( Innings[wickets] )
+
+// Match — Legal balls implied by the published overs figure
+Legal Balls = SUM ( Innings[balls] )
+
+// Match — Extras on the scorecard
+Extras = SUM ( Innings[extras] )
+
+// Match — Innings total per over
+Run Rate = DIVIDE ( [Innings Score], DIVIDE ( [Legal Balls], 6 ) )
+
+// Match — West Indies innings total
+West Indies Score = CALCULATE ( [Innings Score], REMOVEFILTERS ( Team ), Innings[batting_team] = "West Indies" )
+
+// Match — India innings total
+India Score = CALCULATE ( [Innings Score], REMOVEFILTERS ( Team ), Innings[batting_team] = "India" )
+
+// Match — Wickets lost by West Indies
+West Indies Wickets = CALCULATE ( [Innings Wickets], REMOVEFILTERS ( Team ), Innings[batting_team] = "West Indies" )
+
+// Match — Wickets lost by India
+India Wickets = CALCULATE ( [Innings Wickets], REMOVEFILTERS ( Team ), Innings[batting_team] = "India" )
+
+// Match — West Indies runs per over
+West Indies Run Rate = CALCULATE ( [Run Rate], REMOVEFILTERS ( Team ), Innings[batting_team] = "West Indies" )
+
+// Match — India runs per over
+India Run Rate = CALCULATE ( [Run Rate], REMOVEFILTERS ( Team ), Innings[batting_team] = "India" )
+
+// Match — Balls left in the 300-ball innings when India finished
+Balls Remaining = VAR IndiaBalls =
+    CALCULATE ( [Legal Balls], REMOVEFILTERS ( Team ), Innings[batting_team] = "India" )
+RETURN
+    300 - IndiaBalls
+
+// Match — Wickets India still had at the end of the chase
+Wickets In Hand = VAR IndiaWickets =
+    CALCULATE ( [Innings Wickets], REMOVEFILTERS ( Team ), Innings[batting_team] = "India" )
+RETURN
+    10 - IndiaWickets
+
+// Match — Runs summed from the over summaries
+Overs Runs = SUM ( Overs[runs_in_over] )
+
+// Match — Innings total minus the over-summary total
+Scorecard Gap = [Innings Score] - [Overs Runs]
+
+// Match — Match result
+Result = SELECTEDVALUE ( Match[result] )
+
+// Match — Series score after this match
+Series Status = SELECTEDVALUE ( Match[series_status] )
+
+// Batting — Runs off the bat
+Batter Runs = SUM ( Batting[runs] )
+
+// Batting — Balls faced on the batting card
+Balls Faced = SUM ( Batting[balls] )
+
+// Batting — Runs per 100 balls faced
+Strike Rate = DIVIDE ( [Batter Runs], [Balls Faced] ) * 100
+
+// Batting — Fours
+Fours = SUM ( Batting[fours] )
+
+// Batting — Sixes
+Sixes = SUM ( Batting[sixes] )
+
+// Batting — Runs scored in fours and sixes
+Boundary Runs = [Fours] * 4 + [Sixes] * 6
+
+// Batting — Boundary runs as a share of batter runs
+Boundary Pct = DIVIDE ( [Boundary Runs], [Batter Runs] )
+
+// Batting — Batter runs that were not fours or sixes
+Non Boundary Runs = [Batter Runs] - [Boundary Runs]
+
+// Batting — Innings of 100 or more
+Centuries = COUNTROWS ( FILTER ( Batting, Batting[runs] >= 100 ) )
+
+// Batting — Innings of 200 or more
+Double Centuries = COUNTROWS ( FILTER ( Batting, Batting[runs] >= 200 ) )
+
+// Batting — Innings of 50 to 99
+Fifties = COUNTROWS ( FILTER ( Batting, Batting[runs] >= 50 && Batting[runs] < 100 ) )
+
+// Batting — Not-out innings
+Not Outs = SUM ( Batting[not_out] )
+
+// Batting — Players who batted
+Batters Used = COUNTROWS ( Batting )
+
+// Batting — Highest individual score
+Highest Score = MAX ( Batting[runs] )
+
+// Batting — Highest scorer on the batting card
+Top Scorer = VAR TopRow =
+    TOPN ( 1, Batting, Batting[runs], DESC, Batting[balls], ASC )
+RETURN
+    CONCATENATEX ( TopRow, Batting[batter] & " " & Batting[runs] & IF ( Batting[not_out] = 1, "*", "" ) )
+
+// Batting — Batting-card balls minus legal balls in the over summary
+Balls Faced Gap = SUMX (
+    VALUES ( Innings[batting_team] ),
+    VAR Side = Innings[batting_team]
+    RETURN
+        CALCULATE ( SUM ( Batting[balls] ), Batting[team] = Side )
+            - CALCULATE ( SUM ( Overs[legal_balls] ), Overs[batting_team] = Side )
+)
+
+// Batting — Boundary and non-boundary batter runs
+Scoring Mix Runs = SUM ( ScoringMix[runs] )
+
+// Bowling — Wickets on the bowling card
+Wickets Taken = SUM ( Bowling[wickets] )
+
+// Bowling — Runs conceded on the bowling card
+Runs Conceded = SUM ( Bowling[runs_conceded] )
+
+// Bowling — Balls bowled on the bowling card
+Balls Bowled = SUM ( Bowling[balls] )
+
+// Bowling — Runs conceded per over
+Economy = DIVIDE ( [Runs Conceded], DIVIDE ( [Balls Bowled], 6 ) )
+
+// Bowling — Runs conceded per wicket
+Bowling Average = DIVIDE ( [Runs Conceded], [Wickets Taken] )
+
+// Bowling — Balls bowled per wicket
+Bowling Strike Rate = DIVIDE ( [Balls Bowled], [Wickets Taken] )
+
+// Bowling — Maiden overs
+Maidens = SUM ( Bowling[maidens] )
+
+// Bowling — Lowest economy of anyone who bowled at least one over
+Best Economy = MINX ( FILTER ( Bowling, Bowling[balls] >= 6 ), DIVIDE ( Bowling[runs_conceded] * 6, Bowling[balls] ) )
+
+// Bowling — Most wickets, then fewest runs conceded
+Best Bowler = VAR TopRow =
+    TOPN ( 1, Bowling, Bowling[wickets], DESC, Bowling[runs_conceded], ASC, Bowling[balls], ASC )
+RETURN
+    CONCATENATEX ( TopRow, Bowling[bowler] & " " & Bowling[wickets] & "/" & Bowling[runs_conceded] )
+
+// Bowling — Innings totals minus the bowling card, summed across innings
+Bowling Card Gap = CALCULATE (
+    SUMX (
+        VALUES ( Innings[innings] ),
+        VAR Inn = Innings[innings]
+        RETURN
+            CALCULATE ( SUM ( Innings[score] ), Innings[innings] = Inn )
+                - CALCULATE ( SUM ( Bowling[runs_conceded] ), Bowling[innings] = Inn )
+    ),
+    REMOVEFILTERS ( Team )
+)
+
+// Phases — Wickets read off the over-summary cumulative
+Overs Wickets = SUM ( Overs[wickets_in_over] )
+
+// Phases — Score at the end of the over
+Cumulative Runs = MAX ( Overs[cumulative_runs] )
+
+// Phases — Runs between fall-of-wicket scores, from zero
+Runs Added = SUM ( FallOfWickets[runs_added] )
+
+// Phases — Fall-of-wicket entries
+Wickets Fallen = COUNTROWS ( FallOfWickets )
+
+// Phases — Runs scored after the last wicket in each innings
+Runs After Last Wicket = SUMX (
+    VALUES ( Innings[batting_team] ),
+    VAR Side = Innings[batting_team]
+    VAR LastScore =
+        CALCULATE ( MAXX ( FallOfWickets, FallOfWickets[score] ), FallOfWickets[batting_team] = Side )
+    VAR Total =
+        CALCULATE ( SUM ( Innings[score] ), Innings[batting_team] = Side )
+    RETURN
+        Total - LastScore
+)
+
+// Phases — Most runs in a single over summary
+Highest Over = MAX ( Overs[runs_in_over] )
+
+// Phases — Runs per over inside the current phase
+Phase Run Rate = DIVIDE ( SUM ( Overs[runs_in_over] ), DIVIDE ( SUM ( Overs[legal_balls] ), 6 ) )
+
+// Squad — Players who did not bat
+Did Not Bat = COUNTROWS ( DidNotBat )
+
+// Squad — Players who appear on both the batting and bowling cards
+All Rounders = COUNTROWS ( AllRounder )
+
+// Squad — Runs by players who also bowled
+All Rounder Runs = SUM ( AllRounder[runs] )
+
+// Squad — Wickets by players who also batted
+All Rounder Wickets = SUM ( AllRounder[wickets] )

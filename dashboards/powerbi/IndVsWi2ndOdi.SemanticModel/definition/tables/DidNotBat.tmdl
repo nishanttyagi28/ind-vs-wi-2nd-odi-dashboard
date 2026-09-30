@@ -1,0 +1,32 @@
+/// Named players who did not bat.
+table DidNotBat
+	lineageTag: 152489d6-2ec0-5133-ac96-c639ba77a98f
+
+	column match_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 246e70ee-7de4-54ce-bd62-f927505d077d
+		summarizeBy: none
+		sourceColumn: match_id
+
+	column team
+		dataType: string
+		lineageTag: 4f01912f-f3e3-5eba-9488-452c60947236
+		summarizeBy: none
+		sourceColumn: team
+
+	column batter
+		dataType: string
+		lineageTag: fd584555-c4b1-579c-b674-c934438f3be0
+		summarizeBy: none
+		sourceColumn: batter
+
+	partition DidNotBat = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document ( File.Contents ( DataFolder & "\DidNotBat.csv" ), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv] ),
+				    Promoted = Table.PromoteHeaders ( Source, [PromoteAllScalars = true] ),
+				    Typed = Table.TransformColumnTypes ( Promoted, {{"match_id", Int64.Type}, {"team", type text}, {"batter", type text}}, "en-US" )
+				in
+				    Typed

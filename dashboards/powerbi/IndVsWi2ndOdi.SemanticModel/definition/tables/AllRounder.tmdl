@@ -1,0 +1,88 @@
+/// Players who are on both the batting card and the bowling card.
+table AllRounder
+	lineageTag: c7eaedf9-9242-5908-83dd-ef5d92c09f5b
+
+	column player
+		dataType: string
+		lineageTag: 834b2640-be4a-5d40-b9b5-715784e006aa
+		summarizeBy: none
+		sourceColumn: player
+
+	column team
+		dataType: string
+		lineageTag: 1f8343b6-8095-5430-9ce1-6cb5d35d4a36
+		summarizeBy: none
+		sourceColumn: team
+
+	column runs
+		dataType: int64
+		formatString: 0
+		lineageTag: fd49129b-ecb9-5570-8d5c-725e2a87f651
+		summarizeBy: sum
+		sourceColumn: runs
+
+	column balls
+		dataType: int64
+		formatString: 0
+		lineageTag: 0e68efb1-8c96-555f-8d45-455f1a1e1697
+		summarizeBy: sum
+		sourceColumn: balls
+
+	column fours
+		dataType: int64
+		formatString: 0
+		lineageTag: 55bdae90-2072-5ba3-b593-59589b870851
+		summarizeBy: sum
+		sourceColumn: fours
+
+	column sixes
+		dataType: int64
+		formatString: 0
+		lineageTag: 9a23d580-7225-5568-8f14-d9e5beb83dc1
+		summarizeBy: sum
+		sourceColumn: sixes
+
+	column not_out
+		dataType: int64
+		formatString: 0
+		lineageTag: e997e655-82fa-5957-a372-e215eb4c7819
+		summarizeBy: sum
+		sourceColumn: not_out
+
+	column wickets
+		dataType: int64
+		formatString: 0
+		lineageTag: 921a18be-174b-5f80-91aa-d42e59ca0c22
+		summarizeBy: sum
+		sourceColumn: wickets
+
+	column runs_conceded
+		dataType: int64
+		formatString: 0
+		lineageTag: 0375d1b2-20e6-5301-b7cb-5f09c5e8d227
+		summarizeBy: sum
+		sourceColumn: runs_conceded
+
+	column balls_bowled
+		dataType: int64
+		formatString: 0
+		lineageTag: 88136287-d56d-5b87-a4f0-c1daf48aa110
+		summarizeBy: sum
+		sourceColumn: balls_bowled
+
+	column overs
+		dataType: double
+		formatString: 0.0
+		lineageTag: 45c81a66-aaa9-54f3-9ae6-162aec0d020a
+		summarizeBy: none
+		sourceColumn: overs
+
+	partition AllRounder = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document ( File.Contents ( DataFolder & "\AllRounder.csv" ), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv] ),
+				    Promoted = Table.PromoteHeaders ( Source, [PromoteAllScalars = true] ),
+				    Typed = Table.TransformColumnTypes ( Promoted, {{"player", type text}, {"team", type text}, {"runs", Int64.Type}, {"balls", Int64.Type}, {"fours", Int64.Type}, {"sixes", Int64.Type}, {"not_out", Int64.Type}, {"wickets", Int64.Type}, {"runs_conceded", Int64.Type}, {"balls_bowled", Int64.Type}, {"overs", type number}}, "en-US" )
+				in
+				    Typed
