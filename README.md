@@ -6,6 +6,9 @@ Shubman Gill made 223 not out off 133. Rohit Sharma made 101. West Indies had hu
 
 The Power BI report is the working view of that scorecard. Every figure on it is calculated from the files in `data/`.
 
+Photographs of Rohit Sharma, Shubman Gill and Virat Kohli are on the Player Comparison page. Credits are in [dashboards/powerbi/image-credits.md](dashboards/powerbi/image-credits.md).
+
+
 [Dashboard walkthrough (48 s)](dashboards/powerbi/dashboard-walkthrough.mp4)
 
 | | |

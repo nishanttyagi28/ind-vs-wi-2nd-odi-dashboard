@@ -18,7 +18,7 @@
 | --- | --- |
 | **1. Match Overview**: 405/7 and 406/2, run rates 8.10 and 9.33, 39 balls left, 8 wickets in hand, the worm, runs each over, runs by phase, fall of wickets ![Match Overview](./screenshots/01-match-overview.png) | **2. Batting**: batter runs and strike rate by side, centuries, boundary share, runs by batter, boundary against other batter runs, the batting card, players who did not bat ![Batting](./screenshots/02-batting.png) |
 | **3. Bowling**: wickets and economy by side, best economy, the 4-run gap between the bowling card and the innings totals, wickets and economy by bowler, the bowling card ![Bowling](./screenshots/03-bowling.png) | **4. Phases and Wickets**: powerplay, middle and death, wickets by phase, runs added at each wicket, the check of totals against the over summaries ![Phases and Wickets](./screenshots/04-phases-wickets.png) |
-| **5. Player Comparison**: top scorer, best bowler, strike rates, boundary share, the four all-rounders, balls per wicket ![Player Comparison](./screenshots/05-player-comparison.png) | |
+| **5. Player Comparison**: photographs of Rohit Sharma, Shubman Gill and Virat Kohli with their scores, strike rates, boundary share, the four all-rounders, balls per wicket ![Player Comparison](./screenshots/05-player-comparison.png) | |
 
 Each page has a team slicer. Phases and Wickets also has a phase slicer. The headline cards for the two totals, the balls remaining and the wickets in hand do not move with that slicer, so the match result stays on the page.
 
@@ -58,7 +58,7 @@ There is no wagon-wheel page. The files have no shot direction. There is no name
 - Batting is the card. Strike rate is batter runs per 100 balls faced. Boundary share uses fours and sixes only. Extras are not in the batter runs, which is why 384 plus 22 extras is 406, and 382 plus 23 extras is 405.
 - Bowling is the card. Economy is runs conceded per over from the balls column, not from the decimal look of the overs figure. 6.1 overs is 37 balls.
 - Phases and Wickets uses the ODI split: overs 1 to 10, 11 to 40, and 41 to 50. India's 44th over sits in the death band. Runs added on a wicket are the score minus the previous wicket, or minus zero for the first.
-- Player Comparison puts the batting card and the bowling card next to each other for the four names that are on both.
+- Player Comparison puts Rohit, Gill and Kohli next to their scores. The photographs are from earlier events; credits are in [image-credits.md](./image-credits.md). The same page puts the batting card and the bowling card next to each other for the four names that are on both.
 
 ## Open in Power BI Desktop
 
