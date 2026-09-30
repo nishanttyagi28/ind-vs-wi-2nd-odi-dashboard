@@ -9,7 +9,7 @@ The Power BI report is the working view of that scorecard. Every figure on it is
 Photographs of Rohit Sharma, Shubman Gill and Virat Kohli are on the Player Comparison page. Credits are in [dashboards/powerbi/image-credits.md](dashboards/powerbi/image-credits.md).
 
 
-[Dashboard walkthrough (42 s)](dashboards/powerbi/dashboard-walkthrough.mp4)
+[Dashboard walkthrough (40 s)](dashboards/powerbi/dashboard-walkthrough.mp4)
 
 | | |
 | --- | --- |
