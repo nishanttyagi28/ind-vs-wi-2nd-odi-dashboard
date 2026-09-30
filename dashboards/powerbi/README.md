@@ -2,7 +2,7 @@
 
 `IndVsWi2ndOdi.pbip` is the report for the 2nd ODI. The semantic model is TMDL. It loads the CSVs in `extracts/`, which are the scorecard in `data/` plus a few columns that are arithmetic on those files: legal balls from the published overs figure, wickets in each over from the cumulative, ODI phase bands, runs added between fall-of-wicket scores, and the players who appear on both the batting and bowling cards.
 
-[Dashboard walkthrough (48 s)](./dashboard-walkthrough.mp4)
+[Dashboard walkthrough (42 s)](./dashboard-walkthrough.mp4)
 
 ## Business questions
 
