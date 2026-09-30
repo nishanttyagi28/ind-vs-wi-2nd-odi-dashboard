@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.0.0/schema.json",
+  "pageOrder": [
+    "p01_match_overview",
+    "p02_batting",
+    "p03_bowling",
+    "p04_phases_wickets",
+    "p05_player_comparison"
+  ],
+  "activePageName": "p01_match_overview"
+}
