@@ -1,0 +1,3 @@
+match_id,innings,batting_team,bowling_team,score,wickets,overs,balls,extras,extras_detail
+1529228,1,West Indies,India,405,7,50.0,300,23,"b 1, nb 1, w 20 (PTI)"
+1529228,2,India,West Indies,406,2,43.3,261,22,breakdown not published in sources (derived: total minus batter runs)

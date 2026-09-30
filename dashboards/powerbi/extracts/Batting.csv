@@ -1,0 +1,14 @@
+match_id,innings,team,bat_pos,batter,dismissal,runs,balls,fours,sixes,not_out,strike_rate,boundary_runs
+1529228,1,West Indies,1,John Campbell,c Naman Dhir b Gurnoor Brar,101,68,9,5,0,148.53,66
+1529228,1,West Indies,2,Keacy Carty,c Naman Dhir b Prasidh Krishna,9,10,2,0,0,90.0,8
+1529228,1,West Indies,3,Shai Hope,c Auqib Nabi b Kuldeep Yadav,104,94,8,3,0,110.64,50
+1529228,1,West Indies,4,Amir Jangoo,c Ruturaj Gaikwad b Ravindra Jadeja,114,77,13,3,0,148.05,70
+1529228,1,West Indies,5,Sherfane Rutherford,c sub (Yashasvi Jaiswal) b Gurnoor Brar,0,1,0,0,0,0.0,0
+1529228,1,West Indies,6,Roston Chase,not out,29,25,4,0,1,116.0,16
+1529228,1,West Indies,7,Keemo Paul,c Virat Kohli b Kuldeep Yadav,3,8,0,0,0,37.5,0
+1529228,1,West Indies,8,Alzarri Joseph,c Rohit Sharma b Ravindra Jadeja,8,10,1,0,0,80.0,4
+1529228,1,West Indies,9,Shamar Joseph,not out,14,8,1,1,1,175.0,10
+1529228,2,India,1,Rohit Sharma,lbw b Jayden Seales,101,75,10,6,0,134.67,76
+1529228,2,India,2,Shubman Gill,not out,223,133,26,8,1,167.67,152
+1529228,2,India,3,Virat Kohli,c Sherfane Rutherford b Shamar Joseph,29,19,3,1,0,152.63,18
+1529228,2,India,4,Ruturaj Gaikwad,not out,31,37,2,0,1,83.78,8
