@@ -1,0 +1,119 @@
+<!doctype html><html><head><meta charset="utf-8"><title>IND vs WI – 2nd ODI Dashboard</title>
+<script>/*PLOTLYJS*/</script>
+<style>
+:root{--bg:#1B1A19;--panel:#252423;--line:#3B3A39;--txt:#F3F2F1;--mut:#A19F9D;--ind:#118DFF;--wi:#E66C37;--acc:#F2C811}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:"Segoe UI",Roboto,Arial,sans-serif}
+.top{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:#111;border-bottom:3px solid var(--acc)}
+.top h1{margin:0;font-size:22px;font-weight:600}.top .sub{color:var(--mut);font-size:13px;margin-top:3px}
+.logo{display:flex;gap:10px;align-items:center}.pbi{width:34px;height:34px;display:flex;align-items:flex-end;gap:3px}
+.pbi i{display:block;width:8px;background:var(--acc);border-radius:2px}
+.slicer{display:flex;gap:6px}.slicer button{background:var(--panel);color:var(--txt);border:1px solid var(--line);padding:6px 14px;border-radius:3px;cursor:pointer;font-size:13px}
+.slicer button.on{background:var(--acc);color:#111;border-color:var(--acc);font-weight:600}
+.wrap{padding:16px 24px 30px}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:12px 14px;position:relative}
+.card .lbl{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}
+.card .val{font-size:30px;font-weight:600;margin-top:4px}.card .note{font-size:12px;color:var(--mut);margin-top:2px}
+.card.ind{border-top:3px solid var(--ind)}.card.wi{border-top:3px solid var(--wi)}.card.acc{border-top:3px solid var(--acc)}
+.card .val.sm{font-size:20px;line-height:1.25}
+.grid{display:grid;gap:12px;margin-bottom:12px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1.2fr 1fr 1fr}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:8px 10px}
+.panel h3{margin:4px 6px 2px;font-size:14px;font-weight:600}.panel .h{color:var(--mut);font-size:11px;margin:0 6px 4px}
+.chart{height:360px}.chart.tall{height:400px}
+table{width:100%;border-collapse:collapse;font-size:13px}th{background:#323130;color:var(--mut);text-align:right;padding:6px 8px;font-weight:600}
+td{padding:5px 8px;border-bottom:1px solid var(--line);text-align:right}th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+tr:hover td{background:#2F2E2D}.tot td{font-weight:600;background:#2B2A29}.tag{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.foot{color:var(--mut);font-size:11px;margin-top:10px}
+</style></head><body>
+<div class="top"><div class="logo"><div class="pbi"><i style="height:14px"></i><i style="height:22px"></i><i style="height:32px"></i></div>
+<div><h1 id="title"></h1><div class="sub" id="subtitle"></div></div></div>
+<div class="slicer" id="slicer"><button data-t="All" class="on">All teams</button><button data-t="India">India</button><button data-t="West Indies">West Indies</button></div></div>
+<div class="wrap">
+<div class="kpis" id="kpis"></div>
+<div class="grid g2"><div class="panel"><h3>Runs by Batter</h3><div class="h">Bar colour = team · hover for balls, SR, 4s/6s</div><div id="c_runs" class="chart"></div></div>
+<div class="panel"><h3>Bowling: Wickets vs Economy</h3><div class="h">Bars = wickets (left axis) · diamonds = economy (right axis)</div><div id="c_bowl" class="chart"></div></div></div>
+<div class="grid g3"><div class="panel"><h3>Run Progression (Worm) & Fall of Wickets</h3><div class="h">Cumulative runs per over · ✕ = wicket</div><div id="c_worm" class="chart"></div></div>
+<div class="panel"><h3>Boundaries: 4s vs 6s by Batter</h3><div class="h">Stacked count</div><div id="c_bnd" class="chart"></div></div>
+<div class="panel"><h3>Scoring Mix by Team</h3><div class="h">Boundary runs vs other runs (incl. extras)</div><div id="c_mix" class="chart"></div></div></div>
+<div class="grid"><div class="panel"><h3>Runs per Over (Manhattan)</h3><div class="h">Over-by-over runs, both innings</div><div id="c_man" class="chart" style="height:300px"></div></div></div>
+<div class="grid g2"><div class="panel"><h3>Batting Scorecard</h3><div id="t_bat"></div></div><div class="panel"><h3>Bowling Scorecard</h3><div id="t_bowl"></div><h3 style="margin-top:14px">Fall of Wickets</h3><div id="t_fow"></div></div></div>
+<div class="foot" id="foot"></div>
+</div>
+<script>
+const DATA=/*DATA*/;
+const C={India:'#118DFF','West Indies':'#E66C37'}, M=DATA.mi;
+const base={paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',font:{color:'#F3F2F1',family:'Segoe UI,Roboto,Arial',size:12},
+ margin:{l:50,r:20,t:10,b:40},xaxis:{gridcolor:'#3B3A39',zerolinecolor:'#3B3A39'},yaxis:{gridcolor:'#3B3A39',zerolinecolor:'#3B3A39'},
+ legend:{orientation:'h',y:1.08,x:0},hoverlabel:{bgcolor:'#111',bordercolor:'#F2C811'}};
+const cfg={displaylogo:false,responsive:true,modeBarButtonsToRemove:['lasso2d','select2d']};
+const L=o=>Object.assign(JSON.parse(JSON.stringify(base)),o);
+document.getElementById('title').textContent=`${M.match} · ${M.format}`;
+document.getElementById('subtitle').textContent=`${M.date} · ${M.venue}, ${M.city} · ${M.series} · ${M.toss}`;
+document.getElementById('foot').innerHTML=`Sources: <a style="color:#118DFF" href="${M.source_scorecard}">Indian Express scorecard & commentary</a> · <a style="color:#118DFF" href="${M.source_report}">PTI scoreboard (News18)</a>. India extras (${M.team2_extras}) derived as total minus batter runs; breakdown not published. SR = runs/balls×100; Economy = runs/(balls/6).`;
+function render(team){
+ const T=x=>team==='All'||x===team;
+ const bat=DATA.bat.filter(r=>T(r.team)), bowl=DATA.bowl.filter(r=>T(r.bowling_team));
+ // KPIs
+ const top=DATA.bat.filter(r=>T(r.team)).sort((a,b)=>b.runs-a.runs)[0];
+ const bb=DATA.bowl.filter(r=>T(r.bowling_team)).sort((a,b)=>b.wickets-a.wickets||a.runs_conceded-b.runs_conceded)[0];
+ const six=bat.reduce((s,r)=>s+r.sixes,0), four=bat.reduce((s,r)=>s+r.fours,0);
+ document.getElementById('kpis').innerHTML=`
+ <div class="card wi"><div class="lbl">West Indies (1st inns)</div><div class="val">${M.team1_score}/${M.team1_wickets}</div><div class="note">${M.team1_overs} overs · RR ${(405/50).toFixed(2)}</div></div>
+ <div class="card ind"><div class="lbl">India (2nd inns)</div><div class="val">${M.team2_score}/${M.team2_wickets}</div><div class="note">${M.team2_overs} overs · RR ${(406/(261/6)).toFixed(2)}</div></div>
+ <div class="card acc"><div class="lbl">Result</div><div class="val sm">India won by 8 wkts</div><div class="note">39 balls to spare · ${M.series_status}</div></div>
+ <div class="card acc"><div class="lbl">Top Scorer${team==='All'?'':' ('+team+')'}</div><div class="val sm">${top.batter} ${top.runs}${top.not_out?'*':''}</div><div class="note">${top.balls} balls · ${top.fours}×4 ${top.sixes}×6 · SR ${top.strike_rate}</div></div>
+ <div class="card acc"><div class="lbl">Best Bowler${team==='All'?'':' ('+team+')'}</div><div class="val sm">${bb.bowler} ${bb.wickets}/${bb.runs_conceded}</div><div class="note">${bb.overs} ov · Econ ${bb.economy}</div></div>
+ <div class="card acc"><div class="lbl">Boundaries</div><div class="val">${four+six}</div><div class="note">${four} fours · ${six} sixes · ${four*4+six*6} runs</div></div>`;
+ // runs by batter
+ const tr=['West Indies','India'].filter(T).map(t=>{const d=DATA.bat.filter(r=>r.team===t);return{type:'bar',name:t,orientation:'h',marker:{color:C[t]},
+  y:d.map(r=>r.batter+(r.not_out?'*':'')),x:d.map(r=>r.runs),text:d.map(r=>r.runs),textposition:'outside',
+  customdata:d.map(r=>[r.balls,r.strike_rate,r.fours,r.sixes,r.dismissal]),
+  hovertemplate:'<b>%{y}</b><br>%{x} runs off %{customdata[0]} balls<br>SR %{customdata[1]}<br>4s %{customdata[2]} · 6s %{customdata[3]}<br>%{customdata[4]}<extra>'+t+'</extra>'}});
+ Plotly.react('c_runs',tr,L({margin:{l:130,r:30,t:10,b:30},yaxis:{autorange:'reversed',gridcolor:'#3B3A39'},xaxis:{gridcolor:'#3B3A39',title:'Runs'}}),cfg);
+ // bowling combo
+ const bt=[];['India','West Indies'].filter(T).forEach(t=>{const d=DATA.bowl.filter(r=>r.bowling_team===t);
+  bt.push({type:'bar',name:t+' wickets',x:d.map(r=>r.bowler),y:d.map(r=>r.wickets),marker:{color:C[t]},customdata:d.map(r=>[r.overs,r.runs_conceded,r.economy]),
+   hovertemplate:'<b>%{x}</b><br>%{y} wkts · %{customdata[0]} ov · %{customdata[1]} runs<br>Econ %{customdata[2]}<extra></extra>'});
+  bt.push({type:'scatter',mode:'markers+lines',name:t+' economy',x:d.map(r=>r.bowler),y:d.map(r=>r.economy),yaxis:'y2',line:{color:C[t],dash:'dot',width:1},
+   marker:{symbol:'diamond',size:11,color:'#F2C811',line:{color:C[t],width:2}},hovertemplate:'<b>%{x}</b><br>Economy %{y}<extra></extra>'})});
+ Plotly.react('c_bowl',bt,L({margin:{l:45,r:50,t:30,b:90},xaxis:{tickangle:-35,gridcolor:'#3B3A39'},yaxis:{title:'Wickets',dtick:1,gridcolor:'#3B3A39'},
+  yaxis2:{title:'Economy',overlaying:'y',side:'right',showgrid:false,range:[0,18]},legend:{orientation:'h',y:1.15,x:0,font:{size:11}}}),cfg);
+ // worm + fow
+ const wt=[];['West Indies','India'].filter(T).forEach(t=>{const d=DATA.ov.filter(r=>r.batting_team===t);
+  const x=[0].concat(d.map(r=>r.legal_balls<6?(r.over_no-1)+r.legal_balls/6:r.over_no)),y=[0].concat(d.map(r=>r.cumulative_runs));
+  wt.push({type:'scatter',mode:'lines',name:t,x,y,line:{color:C[t],width:3,shape:'spline'},hovertemplate:'Over %{x:.1f}: %{y} runs<extra>'+t+'</extra>'});
+  const f=DATA.fow.filter(r=>r.batting_team===t);
+  wt.push({type:'scatter',mode:'markers',name:t+' wkts',showlegend:false,x:f.map(r=>{const[a,b]=String(r.over).split('.');return +a+(+b||0)/6}),y:f.map(r=>r.score),
+   marker:{symbol:'x',size:11,color:'#fff',line:{color:C[t],width:2}},text:f.map(r=>`${r.wicket_no}-${r.score} ${r.batter_out} (${r.over} ov)`),hovertemplate:'%{text}<extra></extra>'})});
+ Plotly.react('c_worm',wt,L({xaxis:{title:'Overs',range:[0,50.5],gridcolor:'#3B3A39'},yaxis:{title:'Runs',gridcolor:'#3B3A39'}}),cfg);
+ // boundaries
+ Plotly.react('c_bnd',[{type:'bar',name:'4s',x:bat.map(r=>r.batter.split(' ').slice(-1)[0]),y:bat.map(r=>r.fours),marker:{color:'#12B5CB'},hovertemplate:'%{x}: %{y} fours<extra></extra>'},
+  {type:'bar',name:'6s',x:bat.map(r=>r.batter.split(' ').slice(-1)[0]),y:bat.map(r=>r.sixes),marker:{color:'#F2C811'},hovertemplate:'%{x}: %{y} sixes<extra></extra>'}],
+  L({barmode:'stack',margin:{l:35,r:10,t:30,b:70},xaxis:{tickangle:-40,gridcolor:'#3B3A39'}}),cfg);
+ // mix donut(s)
+ const mix=[],teams=['West Indies','India'].filter(T);teams.forEach((t,i)=>{const d=DATA.bat.filter(r=>r.team===t),tot=t==='India'?M.team2_score:M.team1_score;
+  const f=d.reduce((s,r)=>s+r.fours*4,0),s6=d.reduce((s,r)=>s+r.sixes*6,0);
+  mix.push({type:'pie',hole:.55,sort:false,labels:['Runs from 4s','Runs from 6s','Other runs'],values:[f,s6,tot-f-s6],marker:{colors:['#12B5CB','#F2C811','#605E5C']},
+   domain:teams.length==2?{x:[i*0.5,i*0.5+0.48]}:{x:[0,1]},title:{text:t+'<br>'+tot,font:{size:12}},textinfo:'percent',hovertemplate:'%{label}: %{value} (%{percent})<extra>'+t+'</extra>'})});
+ Plotly.react('c_mix',mix,L({margin:{l:10,r:10,t:30,b:10},legend:{orientation:'h',y:-0.05}}),cfg);
+ // manhattan
+ Plotly.react('c_man',['West Indies','India'].filter(T).map(t=>{const d=DATA.ov.filter(r=>r.batting_team===t);return{type:'bar',name:t,x:d.map(r=>r.over_no),y:d.map(r=>r.runs_in_over),marker:{color:C[t]},
+  customdata:d.map(r=>[r.cumulative_runs,r.cumulative_wickets,r.legal_balls]),hovertemplate:'Over %{x}: %{y} runs<br>Score %{customdata[0]}/%{customdata[1]}<extra>'+t+'</extra>'}}),
+  L({barmode:'group',xaxis:{title:'Over',dtick:5,gridcolor:'#3B3A39'},yaxis:{title:'Runs',gridcolor:'#3B3A39'}}),cfg);
+ // tables
+ let h='<table><tr><th>Batter</th><th>Dismissal</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th></tr>';
+ ['West Indies','India'].filter(T).forEach(t=>{const d=DATA.bat.filter(r=>r.team===t);
+  h+=d.map(r=>`<tr><td><span class="tag" style="background:${C[t]}"></span>${r.batter}</td><td>${r.dismissal}</td><td><b>${r.runs}</b></td><td>${r.balls}</td><td>${r.fours}</td><td>${r.sixes}</td><td>${r.strike_rate.toFixed(2)}</td></tr>`).join('');
+  const x=t==='India'?M.team2_extras:M.team1_extras,xd=t==='India'?'breakdown n/a':M.team1_extras_detail.replace(' (PTI)','');
+  h+=`<tr><td colspan=2 style="color:#A19F9D">Did not bat: ${DATA.dnb.filter(r=>r.team===t).map(r=>r.batter).join(', ')}</td><td colspan=5 style="color:#A19F9D">Extras ${x} (${xd})</td></tr>`;
+  h+=`<tr class="tot"><td>${t} total</td><td></td><td>${t==='India'?M.team2_score+'/'+M.team2_wickets:M.team1_score+'/'+M.team1_wickets}</td><td colspan=4>${t==='India'?M.team2_overs:M.team1_overs} ov</td></tr>`});
+ document.getElementById('t_bat').innerHTML=h+'</table>';
+ let b='<table><tr><th>Bowler</th><th>Team</th><th>O</th><th>M</th><th>R</th><th>W</th><th>Econ</th></tr>';
+ b+=bowl.map(r=>`<tr><td><span class="tag" style="background:${C[r.bowling_team]}"></span>${r.bowler}</td><td>${r.bowling_team}</td><td>${r.overs}</td><td>${r.maidens}</td><td>${r.runs_conceded}</td><td><b>${r.wickets}</b></td><td>${r.economy.toFixed(2)}</td></tr>`).join('');
+ document.getElementById('t_bowl').innerHTML=b+'</table>';
+ document.getElementById('t_fow').innerHTML='<table><tr><th>Team</th><th>Wkt</th><th>Score</th><th>Batter</th><th>Over</th></tr>'+
+  DATA.fow.filter(r=>T(r.batting_team)).map(r=>`<tr><td><span class="tag" style="background:${C[r.batting_team]}"></span>${r.batting_team}</td><td style="text-align:left">${r.wicket_no}</td><td>${r.score}</td><td>${r.batter_out}</td><td>${Number(r.over).toFixed(1)}</td></tr>`).join('')+'</table>';
+}
+document.querySelectorAll('#slicer button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#slicer button').forEach(x=>x.classList.remove('on'));b.classList.add('on');render(b.dataset.t)});
+render('All');
+</script></body></html>
