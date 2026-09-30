@@ -1,3 +1,5 @@
+The finished report is `dashboards/powerbi/IndVsWi2ndOdi.pbip`. The notes below are the field list if you build a single page by hand.
+
 # Rebuilding the IND vs WI 2nd ODI (Guwahati, 30 Sep 2026) dashboard in Power BI Desktop
 
 Files are in `data/`: `match_info.csv`, `batting.csv`, `bowling.csv`, `fall_of_wickets.csv`, `overs.csv`, `did_not_bat.csv`.
